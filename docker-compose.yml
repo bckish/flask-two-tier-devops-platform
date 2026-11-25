@@ -1,14 +1,12 @@
-version: "3.8"
-
 services:
   mysql:
     container_name: mysql
-    image: mysql
+    image: mysql:8.4
     environment:
       MYSQL_ROOT_PASSWORD: "root"
       MYSQL_DATABASE: "devops"
-    ports:
-      - "3306:3306"
+      MYSQL_USER: "devops"
+      MYSQL_PASSWORD: "local-dev-password"
 
     volumes:
       - mysql_data:/var/lib/mysql
@@ -31,12 +29,12 @@ services:
       context: .
 
     ports:
-      - "5000:5000"
+      - "127.0.0.1:5000:5000"
 
     environment:
       - MYSQL_HOST=mysql
-      - MYSQL_USER=root
-      - MYSQL_PASSWORD=root
+      - MYSQL_USER=devops
+      - MYSQL_PASSWORD=local-dev-password
       - MYSQL_DB=devops
 
     networks:
@@ -47,7 +45,7 @@ services:
         condition: service_healthy
 
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:5000/health || exit 1"]
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen(\"http://localhost:5000/health\")"]
       interval: 10s
       timeout: 5s
       retries: 5

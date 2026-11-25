@@ -1,13 +1,10 @@
-FROM python:3.9-slim 
+FROM python:3.13-slim
 
 # Avoid interactive prompts
 ENV DEBIAN_FRONTEND=noninteractive
 
 WORKDIR /app
 
-
-RUN apt-get update && apt-get install -y gcc default-libmysqlclient-dev pkg-config && \
-rm -rf /var/lib/apt/lists/* 
 
 COPY requirement.txt .
 
@@ -18,5 +15,6 @@ RUN pip install --upgrade pip && \
 COPY . .
 
 EXPOSE 5000
+ENV HOST=0.0.0.0
 
 CMD ["python", "app.py"]

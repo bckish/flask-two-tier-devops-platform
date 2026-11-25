@@ -1,6 +1,6 @@
 # Flask Two-Tier DevOps Platform
 
-A production-oriented two-tier web application demonstrating modern DevOps practices using Flask, MySQL, Docker, Jenkins, and AWS.
+A two-tier DevOps learning application demonstrating modern DevOps practices using Flask, MySQL, Docker, Jenkins, and AWS.
 
 ---
 
@@ -13,9 +13,9 @@ The application consists of two services:
 - Flask Web Application
 - MySQL Database
 
-Both services are deployed as Docker containers using Docker Compose on an AWS EC2 instance. Jenkins automates the CI/CD pipeline by building and deploying the application whenever new changes are pushed to GitHub.
+Both services can run locally via Docker Compose or on an approved AWS EC2 host. Jenkins defines a build and Compose deployment pipeline; cloud deployment is not verified here.
 
-This repository is continuously enhanced with production-grade DevOps practices including Infrastructure as Code, Kubernetes, GitOps, Security, and Observability.
+Infrastructure as Code, GitOps, security and observability are future enhancements, not implemented production claims.
 
 ---
 
@@ -106,6 +106,35 @@ AWS EC2
 
 ---
 
+## Local run
+
+For a database-backed local run without Docker or cloud resources:
+
+```bash
+python3 -m venv .venv
+.venv/bin/pip install -r requirement.txt pytest
+DB_DRIVER=sqlite .venv/bin/python app.py
+# In another terminal:
+.venv/bin/python -m pytest -q
+```
+
+Open http://127.0.0.1:5000. SQLite is a local-only alternative; Compose still uses MySQL.
+
+```bash
+git clone https://github.com/bckish/flask-two-tier-devops-platform.git
+cd flask-two-tier-devops-platform
+docker compose config
+docker compose up --build -d
+curl --fail http://localhost:5000/health
+docker compose down
+```
+
+The Compose configuration is for local practice only; use dedicated credentials and do not expose the database publicly. Run Jenkins on a dedicated lab agent after reviewing its deployment stage. See [PROJECT_REPORT.md](PROJECT_REPORT.md) for project context.
+
+## Attribution
+
+The inherited Jenkinsfile references [prashantgohel321/DevOps-Project-Two-Tier-Flask-App](https://github.com/prashantgohel321/DevOps-Project-Two-Tier-Flask-App.git). Verify upstream redistribution rights before further distribution; no new license is asserted here.
+
 ## Future Enhancements
 
 - GitHub Actions
@@ -139,4 +168,4 @@ This project demonstrates practical experience with:
 
 Kishore Billu
 
-Cloud | DevOps | Platform | AI Engineeringyolo
+Cloud | DevOps | Platform | AI Engineering
