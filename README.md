@@ -169,3 +169,20 @@ This project demonstrates practical experience with:
 Kishore Billu
 
 Cloud | DevOps | Platform | AI Engineering
+
+## Verified local Kubernetes results
+
+Test date: 25 November 2026. Environment: Docker Desktop on Apple Silicon, Kind v0.30.0, Kubernetes v1.34.3. Local images were imported into the isolated cluster; no images were pushed to a registry and no paid cloud resources were created.
+
+Tested code: `131d125` (merged main). The actual Flask Docker build and MySQL 8.4 were deployed into Kind; both pods became Ready. MySQL used a bound 1 GiB local PVC. The Flask health endpoint, message submission and retrieval passed, and a direct SQL count confirmed the inserted test row.
+
+```bash
+docker build -t bckish-local/flask:runtime .
+docker pull mysql:8.4
+kind load docker-image --name YOUR_LOCAL_KIND bckish-local/flask:runtime mysql:8.4
+kubectl --kubeconfig /path/to/local-kind.kubeconfig create namespace flask-local
+kubectl --kubeconfig /path/to/local-kind.kubeconfig apply -f local-k8s/app.yaml
+kubectl --kubeconfig /path/to/local-kind.kubeconfig -n flask-local port-forward --address 127.0.0.1 service/flask 25000:5000
+```
+
+The [local fixture](local-k8s/app.yaml) uses synthetic test-only database values; do not reuse them outside a disposable local cluster. The initial app restart during MySQL initialization recovered successfully. AWS EC2 and Jenkins delivery were not deployed or verified.
