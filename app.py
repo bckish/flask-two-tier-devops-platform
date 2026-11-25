@@ -25,6 +25,10 @@ def init_db():
         mysql.connection.commit()  
         cur.close()
 
+@app.route('/health')
+def health():
+    return jsonify({'status': 'ok'}), 200
+
 @app.route('/')
 def hello():
     cur = mysql.connection.cursor()
@@ -44,4 +48,4 @@ def submit():
 
 if __name__ == '__main__':
     init_db()
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=False)
