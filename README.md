@@ -108,6 +108,18 @@ AWS EC2
 
 ## Local run
 
+For a database-backed local run without Docker or cloud resources:
+
+```bash
+python3 -m venv .venv
+.venv/bin/pip install -r requirement.txt pytest
+DB_DRIVER=sqlite .venv/bin/python app.py
+# In another terminal:
+.venv/bin/python -m pytest -q
+```
+
+Open http://127.0.0.1:5000. SQLite is a local-only alternative; Compose still uses MySQL.
+
 ```bash
 git clone https://github.com/bckish/flask-two-tier-devops-platform.git
 cd flask-two-tier-devops-platform
