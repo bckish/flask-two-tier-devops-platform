@@ -16,7 +16,11 @@ services:
 
     restart: always
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot","-proot"]
+      # The temporary initialization server accepts local socket connections
+      # before the application database is ready. Probe the actual TCP path.
+      test:
+        - CMD-SHELL
+        - mysql --protocol=TCP --host=127.0.0.1 --user="$$MYSQL_USER" --password="$$MYSQL_PASSWORD" --database="$$MYSQL_DATABASE" --execute="SELECT 1"
       interval: 10s
       timeout: 5s
       retries: 5

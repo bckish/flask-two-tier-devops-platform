@@ -190,3 +190,5 @@ The [local fixture](local-k8s/app.yaml) uses synthetic test-only database values
 ## Dependency maintenance (26 November 2026)
 
 The existing dependency set passed local Python tests with deprecation warnings treated as errors; Docker Compose configuration also validated. No forced dependency upgrade was necessary. CI now runs `python -m pytest -q -W error::DeprecationWarning` to prevent regressions.
+
+The follow-up Compose test exposed a startup race with MySQL's temporary initialization server. The readiness check now verifies an authenticated `SELECT 1` over TCP against the actual application database. Two subsequent fresh local database runs passed Flask health, message creation and retrieval with Python deprecations treated as errors.
