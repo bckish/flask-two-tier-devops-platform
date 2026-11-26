@@ -186,3 +186,7 @@ kubectl --kubeconfig /path/to/local-kind.kubeconfig -n flask-local port-forward 
 ```
 
 The [local fixture](local-k8s/app.yaml) uses synthetic test-only database values; do not reuse them outside a disposable local cluster. The initial app restart during MySQL initialization recovered successfully. AWS EC2 and Jenkins delivery were not deployed or verified.
+
+## Dependency maintenance (26 November 2026)
+
+The existing dependency set passed local Python tests with deprecation warnings treated as errors; Docker Compose configuration also validated. No forced dependency upgrade was necessary. CI now runs `python -m pytest -q -W error::DeprecationWarning` to prevent regressions.
